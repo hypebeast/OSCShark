@@ -14,7 +14,7 @@ public:
 
 public slots:
     void doWork();
-    void onMessageReceived();
+    void handleMessage();
 
 signals:
     void finished();

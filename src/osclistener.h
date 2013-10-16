@@ -14,7 +14,7 @@ public:
     OscListener();
 
 signals:
-    void messageReceived();
+    void messageReceived(const osc::ReceivedMessage);
 
 protected:
     virtual void ProcessMessage( const osc::ReceivedMessage&, const IpEndpointName&);

@@ -18,8 +18,8 @@ public:
 
 private:
     QThread *workerThread;
-    bool running;
     OscListenerWorker *worker;
+    bool running;
     int port;
 };
 

@@ -21,4 +21,9 @@ void OscListenerController::Start()
 void OscListenerController::Stop()
 {
     // TODO
+    if (running) {
+        workerThread->quit();
+        workerThread->wait();
+        running = false;
+    }
 }

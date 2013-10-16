@@ -5,7 +5,7 @@
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "osclistener.h"
+#include "osclistenercontroller.h"
 
 #include <iostream>
 using namespace std;
@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     lookupLocalAddresses();
 
     // FIXME just for testing!
-//    OscListener *l = new OscListener("192.168.0.10", 8000);
-//    l->start();
+    OscListenerController *controller = new OscListenerController(8000);
+    controller->Start();
 }
 
 void MainWindow::setupUi()
