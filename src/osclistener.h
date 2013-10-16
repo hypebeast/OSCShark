@@ -2,29 +2,23 @@
 #define OSCLISTENER_H
 
 #include <QObject>
-#include <QString>
-#include <QThread>
 
 #include "osc/OscPacketListener.h"
 #include "ip/UdpSocket.h"
 
-class OscListener : public QThread, public osc::OscPacketListener
+class OscListener : public QObject, public osc::OscPacketListener
 {
     Q_OBJECT
 
 public:
-    OscListener(QString ipAddress, int port);
+    OscListener();
 
+signals:
+    void messageReceived();
 
 protected:
-    virtual void ProcessMessage( const osc::ReceivedMessage& m, const IpEndpointName& remoteEndpoint );
+    virtual void ProcessMessage( const osc::ReceivedMessage&, const IpEndpointName&);
 
-private:
-    virtual void run();
-
-    QString ipAddress;
-    int port;
-    bool running;
 };
 
 #endif // OSCLISTENER_H

@@ -23,8 +23,8 @@ MainWindow::MainWindow(QWidget *parent) :
     lookupLocalAddresses();
 
     // FIXME just for testing!
-    OscListener *l = new OscListener("192.168.0.10", 8000);
-    l->start();
+//    OscListener *l = new OscListener("192.168.0.10", 8000);
+//    l->start();
 }
 
 void MainWindow::setupUi()
