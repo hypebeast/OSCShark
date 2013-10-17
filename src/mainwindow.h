@@ -8,6 +8,9 @@
 #include <QLineEdit>
 #include <QListView>
 #include <QPushButton>
+#include <QList>
+
+#include "common.h"
 
 namespace Ui {
 class MainWindow;
@@ -34,9 +37,14 @@ private:
     QPushButton *bClearView;
     QTextEdit *logOutput;
 
-
     void setupUi();
     void lookupLocalAddresses();
+    void printLogMessage(const QString &);
+    void logOscMessage(const OscMessageContainer*);
+
+private slots:
+    void handleMessage(OscMessageContainer *msg);
 };
+
 
 #endif // MAINWINDOW_H

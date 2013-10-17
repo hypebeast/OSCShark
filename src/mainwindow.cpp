@@ -2,10 +2,12 @@
 #include <QList>
 #include <QHostAddress>
 #include <QNetworkInterface>
+#include <QDateTime>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "osclistenercontroller.h"
+#include "common.h"
 
 #include <iostream>
 using namespace std;
@@ -25,6 +27,9 @@ MainWindow::MainWindow(QWidget *parent) :
     // FIXME just for testing!
     OscListenerController *controller = new OscListenerController(8000);
     controller->Start();
+
+    // Connect to all signals
+    connect(controller, SIGNAL(messageReceived(OscMessageContainer*)), this, SLOT(handleMessage(OscMessageContainer*)));
 }
 
 void MainWindow::setupUi()
@@ -76,6 +81,7 @@ void MainWindow::setupUi()
     logOutput = new QTextEdit;
     logOutput->setMinimumWidth(650);
     logOutput->setMinimumHeight(400);
+    logOutput->setReadOnly(true);
     rightMainLayout->addWidget(logOutput);
     rightMainLayout->addStretch();
 
@@ -101,6 +107,32 @@ void MainWindow::lookupLocalAddresses()
     if (!found) {
         leIpAddress->setText("No IP Address found!");
     }
+}
+
+void MainWindow::handleMessage(OscMessageContainer *msg)
+{
+    logOscMessage(msg);
+}
+
+void MainWindow::logOscMessage(const OscMessageContainer *msg)
+{
+    QString logStr = msg->address + " " + msg->typeTags;
+    foreach (QString arg, msg->arguments) {
+        logStr.append(" ");
+        logStr.append(arg);
+    }
+
+    printLogMessage(logStr);
+}
+
+void MainWindow::printLogMessage(const QString &msg)
+{
+    QDateTime time = QDateTime::currentDateTime();
+    QString output = "- " + time.toString("dd.MM.yyyy hh:mm:ss");
+    output.append(": ");
+    output.append(msg);
+
+    logOutput->append(output);
 }
 
 MainWindow::~MainWindow()

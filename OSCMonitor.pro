@@ -42,7 +42,8 @@ HEADERS  += src/osclistener.h \
     src/osclistenerworker.h \
     src/osclistenercontroller.h \
     src/oscpkt/udp.hh \
-    src/oscpkt/oscpkt.hh
+    src/oscpkt/oscpkt.hh \
+    common.h
 
 win32 {
     SOURCES += src/oscpack/ip/win32/UdpSocket.cpp \

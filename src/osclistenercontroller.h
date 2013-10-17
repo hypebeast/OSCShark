@@ -6,8 +6,9 @@
 
 #include "ip/UdpSocket.h"
 #include "osclistenerworker.h"
+#include "common.h"
 
-class OscListenerController : QObject
+class OscListenerController : public QObject
 {
     Q_OBJECT
 
@@ -15,6 +16,12 @@ public:
     OscListenerController(int);
     void Start();
     void Stop();
+
+signals:
+    void messageReceived(OscMessageContainer *);
+
+private slots:
+    void handleMessage(OscMessageContainer*);
 
 private:
     QThread *workerThread;

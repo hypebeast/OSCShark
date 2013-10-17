@@ -3,7 +3,14 @@
 
 #include <QObject>
 
-#include "ip/UdpSocket.h"
+#define OSCPKT_OSTREAM_OUTPUT
+#include "oscpkt/oscpkt.hh"
+#include "oscpkt/udp.hh"
+#include "common.h"
+
+using std::cout;
+using std::cerr;
+
 
 class OscListenerWorker : public QObject
 {
@@ -14,15 +21,14 @@ public:
 
 public slots:
     void doWork();
-    void handleMessage();
 
 signals:
     void finished();
-    void messageReceived();
+    void messageReceived(OscMessageContainer *msg);
 
 private:
     int port;
-    UdpListeningReceiveSocket *receiveSocket;
+    oscpkt::UdpSocket socket;
 };
 
 #endif // OSCLISTENERWORKER_H
