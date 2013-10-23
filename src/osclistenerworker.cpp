@@ -1,12 +1,28 @@
 #include <QDebug>
 
 #include "osclistenerworker.h"
-#include "osclistener.h"
 #include "common.h"
 
 OscListenerWorker::OscListenerWorker(int port)
     : port(port)
 {
+    this->running = false;
+}
+
+void OscListenerWorker::Start()
+{
+    if (!running) {
+        running = true;
+        doWork();
+    }
+}
+
+void OscListenerWorker::Stop()
+{
+    if (running) {
+        running = false;
+        this->socket.close();
+    }
 }
 
 void OscListenerWorker::doWork()
@@ -20,12 +36,13 @@ void OscListenerWorker::doWork()
         oscpkt::PacketReader pr;
         oscpkt::PacketWriter pw;
 
-        while (socket.isOk()) {
+        while (socket.isOk() && running) {
             if (socket.receiveNextPacket(50)) {
                 pr.init(socket.packetData(), socket.packetSize());
                 oscpkt::Message *msg;
                 while (pr.isOk() && (msg = pr.popMessage()) != 0) {
                     OscMessageContainer *m = new OscMessageContainer;
+                    m->port = this->port;
                     m->address = QString::fromStdString(msg->addressPattern());
                     m->typeTags = QString::fromStdString(msg->typeTags());
                     m->typeTags.insert(0, ',');
@@ -33,22 +50,26 @@ void OscListenerWorker::doWork()
                     oscpkt::Message::ArgReader arg(msg->arg());
                     while (arg.nbArgRemaining()) {
                         if (arg.isBlob()) {
-                // TODO
+                            // TODO
                         } else if (arg.isBool()) {
-                bool b; arg.popBool(b);
-                QString s = b ? "true" : "false";
-                m->arguments.append(s);
+                            bool b; arg.popBool(b);
+                            QString s = b ? "true" : "false";
+                            m->arguments.append(s);
                         } else if (arg.isInt32()) {
-                int i; arg.popInt32(i);
-                m->arguments.append(QString::number(i));
+                            int i; arg.popInt32(i);
+                            m->arguments.append(QString::number(i));
                         } else if (arg.isInt64()) {
-
+                            int64_t i; arg.popInt64(i);
+                            m->arguments.append(QString::number(i));
                         } else if (arg.isFloat()) {
-
+                            float f; arg.popFloat(f);
+                            m->arguments.append(QString::number(f));
                         } else if (arg.isDouble()) {
-
+                            double d; arg.popDouble(d);
+                            m->arguments.append(QString::number(d));
                         } else if (arg.isStr()) {
-
+                            std::string s; arg.popStr(s);
+                            m->arguments.append(QString::fromStdString(s));
                         }
                     }
 

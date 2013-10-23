@@ -16,6 +16,7 @@ public:
     OscListenerController(int);
     void Start();
     void Stop();
+    int Port();
 
 signals:
     void messageReceived(OscMessageContainer *);

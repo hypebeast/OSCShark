@@ -6,11 +6,15 @@
 #include <QVBoxLayout>
 #include <QTextEdit>
 #include <QLineEdit>
-#include <QListView>
+#include <QListWidget>
 #include <QPushButton>
 #include <QList>
+#include <QSettings>
+#include <QCloseEvent>
 
 #include "common.h"
+#include "osclistenercontroller.h"
+
 
 namespace Ui {
 class MainWindow;
@@ -24,26 +28,40 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+protected:
+    void closeEvent(QCloseEvent *event);
+
 private:
     Ui::MainWindow *ui;
     QHBoxLayout *mainLayout;
     QVBoxLayout *leftMainLayout;
     QVBoxLayout *rightMainLayout;
     QLineEdit *leIpAddress;
-    QListView *lvListeningPorts;
-    QListView *lvAvailablePorts;
-    QLineEdit *leAddPort;
+    QListWidget *lvListeningPorts;
+    QListWidget *lvAvailablePorts;
     QPushButton *bAddPort;
     QPushButton *bClearView;
     QTextEdit *logOutput;
+    QList<OscListenerController*> oscListeners;
+    QList<int> availablePorts;
+    QList<int> listeningPorts;
 
     void setupUi();
+    void loadSettings();
+    void saveSettings();
+    void setupSignals();
     void lookupLocalAddresses();
     void printLogMessage(const QString &);
     void logOscMessage(const OscMessageContainer*);
+    void createOscListener(int);
+    void removeOscListener(int);
 
 private slots:
-    void handleMessage(OscMessageContainer *msg);
+    void handleMessage(OscMessageContainer *);
+    void onAddPortClicked();
+    void onAvailablePortClicked(QListWidgetItem*);
+    void onListeningPortClicked(QListWidgetItem*);
+    void onClearViewsClicked();
 };
 
 

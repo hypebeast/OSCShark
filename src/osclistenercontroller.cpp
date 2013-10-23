@@ -3,14 +3,20 @@
 #include "osclistenercontroller.h"
 
 OscListenerController::OscListenerController(int port)
+    : port(port)
 {
     workerThread = new QThread;
     worker = new OscListenerWorker(port);
     worker->moveToThread(workerThread);
-    connect(workerThread, SIGNAL(started()), worker, SLOT(doWork()));
+    connect(workerThread, SIGNAL(started()), worker, SLOT(Start()));
     connect(worker, SIGNAL(messageReceived(OscMessageContainer*)), this, SLOT(handleMessage(OscMessageContainer*)));
 
     running = false;
+}
+
+int OscListenerController::Port()
+{
+    return port;
 }
 
 void OscListenerController::Start()
@@ -23,8 +29,8 @@ void OscListenerController::Start()
 
 void OscListenerController::Stop()
 {
-    // TODO
     if (running) {
+        worker->Stop();
         workerThread->quit();
         workerThread->wait();
         running = false;

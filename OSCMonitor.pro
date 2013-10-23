@@ -12,7 +12,7 @@ TARGET = OSCMonitor
 TEMPLATE = app
 
 
-SOURCES += src/osclistener.cpp \
+SOURCES += \
     src/mainwindow.cpp \
     src/main.cpp \
     src/oscpack/ip/IpEndpointName.cpp \
@@ -24,7 +24,7 @@ SOURCES += src/osclistener.cpp \
     src/osclistenercontroller.cpp
 
 
-HEADERS  += src/osclistener.h \
+HEADERS  += \
     src/mainwindow.h \
     src/oscpack/ip/UdpSocket.h \
     src/oscpack/ip/TimerListener.h \
@@ -62,3 +62,9 @@ unix {
 FORMS    += src/mainwindow.ui
 
 INCLUDEPATH += src/oscpack
+
+OTHER_FILES += \
+    src/stylesheet.qss
+
+RESOURCES += \
+    src/resources.qrc

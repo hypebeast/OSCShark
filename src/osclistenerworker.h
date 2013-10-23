@@ -18,16 +18,19 @@ class OscListenerWorker : public QObject
 
 public:
     OscListenerWorker(int);
+    void Stop();
 
 public slots:
-    void doWork();
+    void Start();
 
 signals:
     void finished();
     void messageReceived(OscMessageContainer *msg);
 
 private:
+    void doWork();
     int port;
+    bool running;
     oscpkt::UdpSocket socket;
 };
 

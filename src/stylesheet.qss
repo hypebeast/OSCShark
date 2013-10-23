@@ -1,0 +1,147 @@
+QWidget {
+    background: #2F2F2F;
+    color: #ffffff;
+    font-family: "Century Gothic";
+}
+
+QToolTip {
+    font-size: 14px;
+    font-family: "Century Gothic";
+    border: 1px solid #bbbbbb;
+    background: #eeeeee;
+}
+
+QStatusBar {
+    border: 1px solid #bbbbbb;
+    background: #eeeeee;
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+QLineEdit, QTextEdit, QSpinBox, QListWidget {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 2px;
+    margin-bottom: 0px;
+    padding-left: 0px;
+    padding-right: 0px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    color: #ffffff;
+    background: #111111;
+    vertical-align:middle;
+    font-size: 10px;
+}
+
+QLineEdit, QTextEdit, QListWidget, QSpinBox, QListWidget {
+    border: 1px solid #F89A14;
+    border-radius: 2px;
+}
+
+QLabel,QPushButton {
+    min-height: 10px;
+    max-height: 24px;
+}
+
+QLabel {
+    font-size: 10px;
+    min-height: 14px;
+    max-height: 25px;
+    margin-top: 1px;
+}
+
+QPushButton {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    text-align:center;
+    font-size: 10px;
+    color: #ffffff;
+    /*background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1.0 #e6e6e6);*/
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #0d70d2, stop: 1.0 #004FCC);
+    border-color: #0d2ed2;
+}
+
+QWidget#MainWindow {
+    border-radius: 5px;
+}
+
+
+QPushButton:hover {
+    color:#ffffff;
+    background-color:#0d2ed2;
+}
+
+QPushButton#blueButton {
+    color:#FFFFFF;
+    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #0d70d2, stop: 1.0 #0d2ed2);
+    border-color: #0d2ed2;
+    font-family: "FontAwesome";
+}
+
+QPushButton#blueButton:hover {
+    color:#ffffff;
+    background-color:#0d2ed2;
+}
+
+QSpinBox {
+    text-align: center;
+    padding-left: 2px;
+    padding-right: 2px;
+}
+
+QSpinBox:disabled {
+    color: #bbbbbb;
+}
+
+QSpinBox::up-button, QSpinBox::down-button {
+     subcontrol-origin: border;
+     padding-left: 3px;
+     padding-right: 3px;
+     width: 12px; /* 16 + 2*1px border-width = 15px padding + 3px parent border */
+     height: 18px;
+     border-width: 0px;
+     border-radius: 4px;
+     color: #ffffff;
+}
+
+QSpinBox::up-button {
+    subcontrol-position: left; /* position at the top right corner */
+}
+
+QSpinBox::up-button:hover, QSpinBox::down-button:hover {
+    background-color: #bbbbbb;
+}
+
+QSpinBox::up-arrow:disabled, QSpinBox::down-arrow:disabled {
+    image: none;
+}
+
+QSpinBox::up-arrow, QSpinBox::down-arrow {
+     width: 12px;
+     height: 12px;
+     border: none;
+}
+
+QSpinBox::up-arrow {
+     image: url(:/data/icons/16x16/black/iconChevronUp.png);
+}
+
+QTextEdit::up-arrow {
+     image: url(:/data/icons/16x16/black/iconChevronUp.png);
+}
+
+QSpinBox::down-arrow {
+     image: url(:/data/icons/16x16/black/iconChevronDown.png);
+}
+
+QSpinBox::down-button {
+     subcontrol-position: right; /* position at bottom right corner */
+}
