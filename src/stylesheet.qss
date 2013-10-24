@@ -4,27 +4,11 @@ QWidget {
     font-family: "Century Gothic";
 }
 
-QToolTip {
-    font-size: 14px;
-    font-family: "Century Gothic";
-    border: 1px solid #bbbbbb;
-    background: #eeeeee;
-}
-
-QStatusBar {
-    border: 1px solid #bbbbbb;
-    background: #eeeeee;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-    margin-right: 20px;
-    margin-left: 20px;
-}
-
 QLineEdit, QTextEdit, QSpinBox, QListWidget {
     margin-left: 2px;
     margin-right: 2px;
     margin-top: 2px;
-    margin-bottom: 0px;
+    margin-bottom: 2px;
     padding-left: 0px;
     padding-right: 0px;
     padding-top: 0px;
@@ -40,23 +24,25 @@ QLineEdit, QTextEdit, QListWidget, QSpinBox, QListWidget {
     border-radius: 2px;
 }
 
-QLabel,QPushButton {
+QLabel {
+    margin-left: 2px;
+    margin-right: 2px;
+    margin-bottom: 0px;
+    margin-top: 0px;
+    padding-bottom: 0px;
+    padding-top: 0px;
+    font-size: 10px;
     min-height: 10px;
     max-height: 24px;
 }
 
-QLabel {
-    font-size: 10px;
-    min-height: 14px;
-    max-height: 25px;
-    margin-top: 1px;
-}
-
 QPushButton {
+    min-height: 10px;
+    max-height: 24px;
     margin-left: 2px;
     margin-right: 2px;
-    margin-top: 0px;
-    margin-bottom: 0px;
+    margin-top: 2px;
+    margin-bottom: 2px;
     padding-left: 15px;
     padding-right: 15px;
     padding-top: 4px;
@@ -64,37 +50,30 @@ QPushButton {
     text-align:center;
     font-size: 10px;
     color: #ffffff;
+    border: 0px;
     /*background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #ffffff, stop: 1.0 #e6e6e6);*/
     background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #0d70d2, stop: 1.0 #004FCC);
-    border-color: #0d2ed2;
 }
-
-QWidget#MainWindow {
-    border-radius: 5px;
-}
-
 
 QPushButton:hover {
     color:#ffffff;
     background-color:#0d2ed2;
 }
 
-QPushButton#blueButton {
-    color:#FFFFFF;
-    background-color: QLinearGradient( x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 #0d70d2, stop: 1.0 #0d2ed2);
-    border-color: #0d2ed2;
-    font-family: "FontAwesome";
+QWidget#MainWindow {
+    border-radius: 5px;
 }
 
-QPushButton#blueButton:hover {
-    color:#ffffff;
-    background-color:#0d2ed2;
+QLineEdit {
+    min-height: 20px;
+    text-align: center;
 }
 
 QSpinBox {
     text-align: center;
     padding-left: 2px;
     padding-right: 2px;
+    min-height: 14px;
 }
 
 QSpinBox:disabled {

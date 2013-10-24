@@ -76,16 +76,13 @@ void MainWindow::setupUi()
     leIpAddress = new QLineEdit;
     leIpAddress->setReadOnly(true);
     leftMainLayout->addWidget(leIpAddress);
-
-    leftMainLayout->addSpacing(5);
+    leftMainLayout->addSpacing(10);
 
     QLabel *label1 = new QLabel;
     label1->setText("LISTENING TO OSC PORTS");
     leftMainLayout->addWidget(label1);
 
     lvListeningPorts = new QListWidget;
-    lvListeningPorts->setMinimumHeight(50);
-    lvListeningPorts->setMaximumHeight(150);
     leftMainLayout->addWidget(lvListeningPorts);
 
     foreach (int port, listeningPorts) {
@@ -97,7 +94,6 @@ void MainWindow::setupUi()
 
     QLabel *infoText1 = new QLabel("Double click on item to stop listening");
     infoText1->setFont(infoFont);
-    infoText1->setMargin(0);
     leftMainLayout->addWidget(infoText1);
 
     leftMainLayout->addSpacing(15);
@@ -107,8 +103,6 @@ void MainWindow::setupUi()
     leftMainLayout->addWidget(label2);
 
     lvAvailablePorts = new QListWidget;
-    lvAvailablePorts->setMinimumHeight(50);
-    lvAvailablePorts->setMaximumHeight(150);
     leftMainLayout->addWidget(lvAvailablePorts);
 
     foreach (int port, availablePorts) {
@@ -122,12 +116,13 @@ void MainWindow::setupUi()
     bAddPort = new QPushButton;
     bAddPort->setText("Add Port");
     leftMainLayout->addWidget(bAddPort);
-
     leftMainLayout->addSpacing(30);
 
     bClearView = new QPushButton;
     bClearView->setText("Clear Views");
     leftMainLayout->addWidget(bClearView);
+
+    leftMainLayout->addStretch();
 
     logOutput = new QTextEdit;
     logOutput->setMinimumWidth(650);
