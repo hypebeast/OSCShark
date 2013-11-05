@@ -21,6 +21,15 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+#ifdef Q_OS_MACX
+    if ( QSysInfo::MacintoshVersion > QSysInfo::MV_10_8 )
+    {
+        // fix Mac OS X 10.9 (mavericks) font issue
+        // https://bugreports.qt-project.org/browse/QTBUG-32789
+        QFont::insertSubstitution(".Lucida Grande UI", "Lucida Grande");
+    }
+#endif
+
     // Register QList<int> as a QT meta type
     qRegisterMetaType< QList<int> >("QList<int>");
     qRegisterMetaTypeStreamOperators< QList<int> >("QList<int>");
@@ -42,7 +51,7 @@ MainWindow::MainWindow(QWidget *parent) :
     lookupLocalAddresses();
 
     // Start listening on all saved listening ports
-    foreach (int port, listeningPorts) {
+    foreach (int port, activePorts) {
         createOscListener(port);
         printLogMessage("Listening to port: " + QString::number(port));
     }
@@ -52,14 +61,14 @@ void MainWindow::loadSettings()
 {
     QSettings settings;
     availablePorts = settings.value("ports/available").value< QList<int> >();
-    listeningPorts = settings.value("ports/active").value< QList<int> >();
+    activePorts = settings.value("ports/active").value< QList<int> >();
 }
 
 void MainWindow::saveSettings()
 {
     QSettings settings;
     settings.setValue("ports/available", QVariant::fromValue< QList<int> >(availablePorts));
-    settings.setValue("ports/active", QVariant::fromValue< QList<int> >(listeningPorts));
+    settings.setValue("ports/active", QVariant::fromValue< QList<int> >(activePorts));
 }
 
 void MainWindow::setupUi()
@@ -82,11 +91,11 @@ void MainWindow::setupUi()
     label1->setText("LISTENING TO OSC PORTS");
     leftMainLayout->addWidget(label1);
 
-    lvListeningPorts = new QListWidget;
-    leftMainLayout->addWidget(lvListeningPorts);
+    lwListeningPorts = new QListWidget;
+    leftMainLayout->addWidget(lwListeningPorts);
 
-    foreach (int port, listeningPorts) {
-        new QListWidgetItem(QString::number(port), lvListeningPorts);
+    foreach (int port, activePorts) {
+        new QListWidgetItem(QString::number(port), lwListeningPorts);
     }
 
     QFont infoFont;
@@ -102,11 +111,11 @@ void MainWindow::setupUi()
     label2->setText("AVAILABLE OSC PORTS");
     leftMainLayout->addWidget(label2);
 
-    lvAvailablePorts = new QListWidget;
-    leftMainLayout->addWidget(lvAvailablePorts);
+    lwAvailablePorts = new QListWidget;
+    leftMainLayout->addWidget(lwAvailablePorts);
 
     foreach (int port, availablePorts) {
-        new QListWidgetItem(QString::number(port), lvAvailablePorts);
+        new QListWidgetItem(QString::number(port), lwAvailablePorts);
     }
 
     QLabel *infoText2 = new QLabel("Double click on item to start listening");
@@ -129,7 +138,31 @@ void MainWindow::setupUi()
     logOutput->setMinimumHeight(400);
     logOutput->setReadOnly(true);
     rightMainLayout->addWidget(logOutput);
-    rightMainLayout->addStretch();
+
+    QHBoxLayout *receivedOscLayout = new QHBoxLayout();
+    rightMainLayout->addLayout(receivedOscLayout);
+
+    QVBoxLayout *leftReceivedOscLayout = new QVBoxLayout();
+    receivedOscLayout->addLayout(leftReceivedOscLayout);
+
+    QVBoxLayout *rightReceivedOscLayout = new QVBoxLayout();
+    receivedOscLayout->addLayout(rightReceivedOscLayout);
+
+    QLabel *lReceivedAddresses = new QLabel("RECEIVED OSC ADDRESSES");
+    leftReceivedOscLayout->addWidget(lReceivedAddresses);
+
+    lwReceivedOscAddresses = new QListWidget();
+    leftReceivedOscLayout->addWidget(lwReceivedOscAddresses);
+
+    leftReceivedOscLayout->addWidget(new QLabel("Double click item to monitor this OSC address.\n"));
+
+    QLabel *lListenToAddresses = new QLabel("ONLY LISTEN TO FOLLOWING OSC ADDRESSES");
+    rightReceivedOscLayout->addWidget(lListenToAddresses);
+
+    lwMonitoredOscAddresses = new QListWidget();
+    rightReceivedOscLayout->addWidget(lwMonitoredOscAddresses);
+
+    rightReceivedOscLayout->addWidget(new QLabel("Double click item to stop monitoring this OSC Address.\nWhen the list is empty every OSC address is monitored."));
 
     this->centralWidget()->setLayout(mainLayout);
     this->setFixedSize(900, 700);
@@ -138,8 +171,10 @@ void MainWindow::setupUi()
 void MainWindow::setupSignals()
 {
     connect(bAddPort, SIGNAL(clicked()), this, SLOT(onAddPortClicked()));
-    connect(lvAvailablePorts, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onAvailablePortClicked(QListWidgetItem*)));
-    connect(lvListeningPorts, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onListeningPortClicked(QListWidgetItem*)));
+    connect(lwAvailablePorts, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onAvailablePortClicked(QListWidgetItem*)));
+    connect(lwListeningPorts, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onListeningPortClicked(QListWidgetItem*)));
+    connect(lwReceivedOscAddresses, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onAddOscAddressClicked(QListWidgetItem*)));
+    connect(lwMonitoredOscAddresses, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onRemoveMonitoredOscAddressClicked(QListWidgetItem*)));
     connect(bClearView, SIGNAL(clicked()), this, SLOT(onClearViewsClicked()));
 }
 
@@ -160,7 +195,7 @@ void MainWindow::onAddPortClicked()
 
         if (!exists) {
             availablePorts.append(port);
-            new QListWidgetItem(QString::number(port), lvAvailablePorts);
+            new QListWidgetItem(QString::number(port), lwAvailablePorts);
 
             saveSettings();
         }
@@ -171,7 +206,7 @@ void MainWindow::onAvailablePortClicked(QListWidgetItem *item)
 {
     int port = item->text().toInt();
     bool found = false;
-    foreach (int p, listeningPorts) {
+    foreach (int p, activePorts) {
         if (p == port) {
             found = true;
             break;
@@ -181,11 +216,11 @@ void MainWindow::onAvailablePortClicked(QListWidgetItem *item)
     if (!found) {
         createOscListener(item->text().toInt());
         // Add the port to the listening ports list and save it
-        listeningPorts.append(port);
+        activePorts.append(port);
         saveSettings();
 
         // Create a new list item
-        new QListWidgetItem(item->text(), lvListeningPorts);
+        new QListWidgetItem(item->text(), lwListeningPorts);
 
         printLogMessage("Listening to port: " + QString::number(port));
     } else {
@@ -197,7 +232,7 @@ void MainWindow::onListeningPortClicked(QListWidgetItem *item)
 {
     int port = item->text().toInt();
     bool found = false;
-    foreach (int p, listeningPorts) {
+    foreach (int p, activePorts) {
         if (p == port) {
             found = true;
             break;
@@ -208,16 +243,54 @@ void MainWindow::onListeningPortClicked(QListWidgetItem *item)
         removeOscListener(port);
 
         // Find the item in the list and remove it
-        for (int i = 0; i < lvListeningPorts->count(); i++) {
-            QListWidgetItem *li = lvListeningPorts->item(i);
+        for (int i = 0; i < lwListeningPorts->count(); i++) {
+            QListWidgetItem *li = lwListeningPorts->item(i);
             if (li->text() == item->text()) {
-                li = lvListeningPorts->takeItem(i);
+                li = lwListeningPorts->takeItem(i);
                 delete li;
                 break;
             }
         }
         printLogMessage("Stopped listening to port: " + QString::number(port));
     }
+}
+
+void MainWindow::onAddOscAddressClicked(QListWidgetItem *item)
+{
+    // Add the OSC address to the monitored OSC addresses, if it's not already
+    bool found = false;
+    foreach (QString address, monitoredOscAddresses) {
+        if (address == item->text()) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        monitoredOscAddresses.append(item->text());
+        new QListWidgetItem(item->text(), lwMonitoredOscAddresses);
+
+        printLogMessage("Added OSC Address \"" + item->text() + "\" for monitoring");
+    }
+}
+
+void MainWindow::onRemoveMonitoredOscAddressClicked(QListWidgetItem *item)
+{
+    if (item == NULL) {
+        return;
+    }
+
+    for (int i = 0; i < lwMonitoredOscAddresses->count(); i++) {
+        QListWidgetItem *li = lwMonitoredOscAddresses->item(i);
+        if (li->text() == item->text()) {
+            monitoredOscAddresses.removeOne(item->text());
+            lwMonitoredOscAddresses->takeItem(i);
+//            delete lwMonitoredOscAddresses->takeItem(i);
+            break;
+        }
+    }
+
+    printLogMessage("Stopped monitoring OSC Address: " + item->text());
 }
 
 void MainWindow::createOscListener(int port)
@@ -233,7 +306,7 @@ void MainWindow::createOscListener(int port)
     OscListenerController *controller = new OscListenerController(port);
 
     // Connect to the message received signal
-    connect(controller, SIGNAL(messageReceived(OscMessageContainer*)), this, SLOT(handleMessage(OscMessageContainer*)));
+    connect(controller, SIGNAL(messageReceived(ReceivedOscMessage*)), this, SLOT(handleMessage(ReceivedOscMessage*)));
 
     // Start listening
     controller->Start();
@@ -251,7 +324,7 @@ void MainWindow::removeOscListener(int port)
             oscListeners.removeAt(i);
             delete controller;
 
-            listeningPorts.removeOne(port);
+            activePorts.removeOne(port);
 
             saveSettings();
 
@@ -277,12 +350,47 @@ void MainWindow::lookupLocalAddresses()
     }
 }
 
-void MainWindow::handleMessage(OscMessageContainer *msg)
+void MainWindow::processIncomingOscMessage(const ReceivedOscMessage *msg)
 {
-    logOscMessage(msg);
+    // Check the OSC address and save it, if it's not already saved
+    bool found = false;
+    foreach (QString address, receivedOscAddresses) {
+        if (address == msg->address) {
+            found = true;
+            break;
+        }
+    }
+
+    if (!found) {
+        receivedOscAddresses.append(msg->address);
+
+        // Add it to the received OSC address list
+        new QListWidgetItem(msg->address, lwReceivedOscAddresses);
+    }
+
+    if (filterOscMessage(msg->address) || monitoredOscAddresses.count() == 0) {
+        logOscMessage(msg);
+    }
 }
 
-void MainWindow::logOscMessage(const OscMessageContainer *msg)
+bool MainWindow::filterOscMessage(const QString address)
+{
+    foreach (QString addr, monitoredOscAddresses) {
+        if (addr == address) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+// Called when an OSC message was received
+void MainWindow::handleMessage(ReceivedOscMessage *msg)
+{
+    processIncomingOscMessage(msg);
+}
+
+void MainWindow::logOscMessage(const ReceivedOscMessage *msg)
 {
     QString logStr;
     logStr.append("[");

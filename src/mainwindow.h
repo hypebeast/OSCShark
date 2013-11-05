@@ -37,14 +37,18 @@ private:
     QVBoxLayout *leftMainLayout;
     QVBoxLayout *rightMainLayout;
     QLineEdit *leIpAddress;
-    QListWidget *lvListeningPorts;
-    QListWidget *lvAvailablePorts;
+    QListWidget *lwListeningPorts;
+    QListWidget *lwAvailablePorts;
     QPushButton *bAddPort;
     QPushButton *bClearView;
     QTextEdit *logOutput;
+    QListWidget *lwReceivedOscAddresses;
+    QListWidget *lwMonitoredOscAddresses;
     QList<OscListenerController*> oscListeners;
     QList<int> availablePorts;
-    QList<int> listeningPorts;
+    QList<int> activePorts;
+    QList<QString> receivedOscAddresses;
+    QList<QString> monitoredOscAddresses;
 
     void setupUi();
     void loadSettings();
@@ -52,16 +56,20 @@ private:
     void setupSignals();
     void lookupLocalAddresses();
     void printLogMessage(const QString &);
-    void logOscMessage(const OscMessageContainer*);
+    void logOscMessage(const ReceivedOscMessage*);
     void createOscListener(int);
     void removeOscListener(int);
+    void processIncomingOscMessage(const ReceivedOscMessage*);
+    bool filterOscMessage(const QString address);
 
 private slots:
-    void handleMessage(OscMessageContainer *);
+    void handleMessage(ReceivedOscMessage *);
     void onAddPortClicked();
     void onAvailablePortClicked(QListWidgetItem*);
     void onListeningPortClicked(QListWidgetItem*);
     void onClearViewsClicked();
+    void onAddOscAddressClicked(QListWidgetItem*);
+    void onRemoveMonitoredOscAddressClicked(QListWidgetItem*);
 };
 
 

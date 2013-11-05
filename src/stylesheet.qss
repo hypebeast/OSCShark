@@ -1,7 +1,7 @@
 QWidget {
     background: #2F2F2F;
     color: #ffffff;
-    font-family: "Century Gothic";
+    font-family: "Lucida Grande";
 }
 
 QLineEdit, QTextEdit, QSpinBox, QListWidget {

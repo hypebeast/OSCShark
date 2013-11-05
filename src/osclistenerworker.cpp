@@ -41,7 +41,7 @@ void OscListenerWorker::doWork()
                 pr.init(socket.packetData(), socket.packetSize());
                 oscpkt::Message *msg;
                 while (pr.isOk() && (msg = pr.popMessage()) != 0) {
-                    OscMessageContainer *m = new OscMessageContainer;
+                    ReceivedOscMessage *m = new ReceivedOscMessage;
                     m->port = this->port;
                     m->address = QString::fromStdString(msg->addressPattern());
                     m->typeTags = QString::fromStdString(msg->typeTags());

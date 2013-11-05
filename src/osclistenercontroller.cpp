@@ -9,7 +9,7 @@ OscListenerController::OscListenerController(int port)
     worker = new OscListenerWorker(port);
     worker->moveToThread(workerThread);
     connect(workerThread, SIGNAL(started()), worker, SLOT(Start()));
-    connect(worker, SIGNAL(messageReceived(OscMessageContainer*)), this, SLOT(handleMessage(OscMessageContainer*)));
+    connect(worker, SIGNAL(messageReceived(ReceivedOscMessage*)), this, SLOT(handleMessage(ReceivedOscMessage*)));
 
     running = false;
 }
@@ -37,7 +37,7 @@ void OscListenerController::Stop()
     }
 }
 
-void OscListenerController::handleMessage(OscMessageContainer *msg)
+void OscListenerController::handleMessage(ReceivedOscMessage *msg)
 {
     emit messageReceived(msg);
 }
