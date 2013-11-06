@@ -8,7 +8,7 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OSCMonitor
+TARGET = OSCShark
 TEMPLATE = app
 
 
@@ -21,7 +21,8 @@ SOURCES += \
     src/oscpack/osc/OscPrintReceivedElements.cpp \
     src/oscpack/osc/OscOutboundPacketStream.cpp \
     src/osclistenerworker.cpp \
-    src/osclistenercontroller.cpp
+    src/osclistenercontroller.cpp \
+    exportdialog.cpp
 
 
 HEADERS  += \
@@ -43,7 +44,8 @@ HEADERS  += \
     src/osclistenercontroller.h \
     src/oscpkt/udp.hh \
     src/oscpkt/oscpkt.hh \
-    common.h
+    common.h \
+    exportdialog.h
 
 win32 {
     SOURCES += src/oscpack/ip/win32/UdpSocket.cpp \

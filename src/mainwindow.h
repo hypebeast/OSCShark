@@ -11,6 +11,7 @@
 #include <QList>
 #include <QSettings>
 #include <QCloseEvent>
+#include <QCheckBox>
 
 #include "common.h"
 #include "osclistenercontroller.h"
@@ -41,6 +42,7 @@ private:
     QListWidget *lwAvailablePorts;
     QPushButton *bAddPort;
     QPushButton *bClearView;
+    QPushButton *bExport;
     QTextEdit *logOutput;
     QListWidget *lwReceivedOscAddresses;
     QListWidget *lwMonitoredOscAddresses;
@@ -49,6 +51,11 @@ private:
     QList<int> activePorts;
     QList<QString> receivedOscAddresses;
     QList<QString> monitoredOscAddresses;
+    QList<OscMessageContainer> receivedMessages;
+    QCheckBox *cbShowTimestamps;
+    QCheckBox *cbShowOnlyUpdatedMessages;
+    bool showTimestamps;
+    bool showOnlyUpdatedMessages;
 
     void setupUi();
     void loadSettings();
@@ -56,20 +63,23 @@ private:
     void setupSignals();
     void lookupLocalAddresses();
     void printLogMessage(const QString &);
-    void logOscMessage(const ReceivedOscMessage*);
+    void logOscMessage(const OscMessageContainer*);
     void createOscListener(int);
     void removeOscListener(int);
-    void processIncomingOscMessage(const ReceivedOscMessage*);
+    void processIncomingOscMessage(const OscMessageContainer*);
     bool filterOscMessage(const QString address);
 
 private slots:
-    void handleMessage(ReceivedOscMessage *);
+    void handleMessage(OscMessageContainer *);
     void onAddPortClicked();
     void onAvailablePortClicked(QListWidgetItem*);
     void onListeningPortClicked(QListWidgetItem*);
     void onClearViewsClicked();
     void onAddOscAddressClicked(QListWidgetItem*);
     void onRemoveMonitoredOscAddressClicked(QListWidgetItem*);
+    void onExportClicked();
+    void onShowTimestampsChecked(int state);
+    void onShowOnlyUpdatedOscMessages(int state);
 };
 
 

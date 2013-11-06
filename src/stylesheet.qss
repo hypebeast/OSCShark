@@ -4,7 +4,7 @@ QWidget {
     font-family: "Lucida Grande";
 }
 
-QLineEdit, QTextEdit, QSpinBox, QListWidget {
+QLineEdit, QTextEdit, QSpinBox, QListWidget, QCheckbox {
     margin-left: 2px;
     margin-right: 2px;
     margin-top: 2px;
@@ -123,4 +123,8 @@ QSpinBox::down-arrow {
 
 QSpinBox::down-button {
      subcontrol-position: right; /* position at bottom right corner */
+}
+
+QCheckBox {
+    font-size: 10px;
 }

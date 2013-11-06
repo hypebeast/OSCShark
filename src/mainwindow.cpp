@@ -6,10 +6,14 @@
 #include <QListWidgetItem>
 #include <QFont>
 #include <QInputDialog>
+#include <QFile>
+#include <QTextStream>
+#include <QMessageBox>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "common.h"
+#include "exportdialog.h"
 
 #include <iostream>
 using namespace std;
@@ -62,6 +66,8 @@ void MainWindow::loadSettings()
     QSettings settings;
     availablePorts = settings.value("ports/available").value< QList<int> >();
     activePorts = settings.value("ports/active").value< QList<int> >();
+    showTimestamps = settings.value("main/showtimestamps").value<bool>();
+    showOnlyUpdatedMessages = settings.value("main/showonlyupdatedmessages").value<bool>();
 }
 
 void MainWindow::saveSettings()
@@ -69,6 +75,8 @@ void MainWindow::saveSettings()
     QSettings settings;
     settings.setValue("ports/available", QVariant::fromValue< QList<int> >(availablePorts));
     settings.setValue("ports/active", QVariant::fromValue< QList<int> >(activePorts));
+    settings.setValue("main/showtimestamps", showTimestamps);
+    settings.setValue("main/showonlyupdatedmessages", showOnlyUpdatedMessages);
 }
 
 void MainWindow::setupUi()
@@ -127,10 +135,24 @@ void MainWindow::setupUi()
     leftMainLayout->addWidget(bAddPort);
     leftMainLayout->addSpacing(30);
 
+    cbShowTimestamps = new QCheckBox("Show Timestamps");
+    cbShowTimestamps->setChecked(showTimestamps);
+    leftMainLayout->addWidget(cbShowTimestamps);
+
+    cbShowOnlyUpdatedMessages = new QCheckBox("Show only updated Messages");
+    cbShowOnlyUpdatedMessages->setChecked(showOnlyUpdatedMessages);
+    leftMainLayout->addWidget(cbShowOnlyUpdatedMessages);
+    leftMainLayout->addSpacing(10);
+
     bClearView = new QPushButton;
-    bClearView->setText("Clear Views");
+    bClearView->setText("Clear Messages");
     leftMainLayout->addWidget(bClearView);
 
+    bExport = new QPushButton;
+    bExport->setText("Export");
+    leftMainLayout->addWidget(bExport);
+
+    leftMainLayout->addSpacing(42);
     leftMainLayout->addStretch();
 
     logOutput = new QTextEdit;
@@ -176,6 +198,9 @@ void MainWindow::setupSignals()
     connect(lwReceivedOscAddresses, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onAddOscAddressClicked(QListWidgetItem*)));
     connect(lwMonitoredOscAddresses, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onRemoveMonitoredOscAddressClicked(QListWidgetItem*)));
     connect(bClearView, SIGNAL(clicked()), this, SLOT(onClearViewsClicked()));
+    connect(bExport, SIGNAL(clicked()), this, SLOT(onExportClicked()));
+    connect(cbShowTimestamps, SIGNAL(stateChanged(int)), this, SLOT(onShowTimestampsChecked(int)));
+    connect(cbShowOnlyUpdatedMessages, SIGNAL(stateChanged(int)), this, SLOT(onShowOnlyUpdatedOscMessages(int)));
 }
 
 void MainWindow::onAddPortClicked()
@@ -306,7 +331,7 @@ void MainWindow::createOscListener(int port)
     OscListenerController *controller = new OscListenerController(port);
 
     // Connect to the message received signal
-    connect(controller, SIGNAL(messageReceived(ReceivedOscMessage*)), this, SLOT(handleMessage(ReceivedOscMessage*)));
+    connect(controller, SIGNAL(messageReceived(OscMessageContainer*)), this, SLOT(handleMessage(OscMessageContainer*)));
 
     // Start listening
     controller->Start();
@@ -350,7 +375,7 @@ void MainWindow::lookupLocalAddresses()
     }
 }
 
-void MainWindow::processIncomingOscMessage(const ReceivedOscMessage *msg)
+void MainWindow::processIncomingOscMessage(const OscMessageContainer *msg)
 {
     // Check the OSC address and save it, if it's not already saved
     bool found = false;
@@ -369,6 +394,7 @@ void MainWindow::processIncomingOscMessage(const ReceivedOscMessage *msg)
     }
 
     if (filterOscMessage(msg->address) || monitoredOscAddresses.count() == 0) {
+        receivedMessages.append(*msg);
         logOscMessage(msg);
     }
 }
@@ -385,14 +411,18 @@ bool MainWindow::filterOscMessage(const QString address)
 }
 
 // Called when an OSC message was received
-void MainWindow::handleMessage(ReceivedOscMessage *msg)
+void MainWindow::handleMessage(OscMessageContainer *msg)
 {
     processIncomingOscMessage(msg);
 }
 
-void MainWindow::logOscMessage(const ReceivedOscMessage *msg)
+void MainWindow::logOscMessage(const OscMessageContainer *msg)
 {
     QString logStr;
+    if (showTimestamps) {
+        logStr.append(msg->time.toString("dd.MM.yyyy hh:mm:ss"));
+        logStr.append(" - ");
+    }
     logStr.append("[");
     logStr.append(QString::number(msg->port));
     logStr.append("] ");
@@ -407,9 +437,7 @@ void MainWindow::logOscMessage(const ReceivedOscMessage *msg)
 
 void MainWindow::printLogMessage(const QString &msg)
 {
-    QDateTime time = QDateTime::currentDateTime();
-    QString output = time.toString("dd.MM.yyyy hh:mm:ss");
-    output.append(" - ");
+    QString output;
     output.append(msg);
 
     logOutput->append(output);
@@ -418,10 +446,59 @@ void MainWindow::printLogMessage(const QString &msg)
 void MainWindow::onClearViewsClicked()
 {
     logOutput->clear();
+    receivedMessages.clear();
+}
+
+void MainWindow::onExportClicked()
+{
+    // Don't export if there are no messages
+    if (receivedMessages.count() <= 0) {
+        QMessageBox msgBox(this);
+        msgBox.setText("There are no OSC Messages to export.");
+        msgBox.exec();
+        return;
+    }
+
+    ExportDialog dlg(this);
+    int result = dlg.exec();
+
+    if (result == QDialog::Accepted) {
+        QString fileName = dlg.fileNameExport;
+        if (!fileName.isEmpty() && !fileName.isNull()) {
+            QFile file(fileName);
+            if (file.open(QFile::WriteOnly | QFile::Truncate)) {
+                QTextStream stream(&file);
+                foreach (OscMessageContainer msg, receivedMessages) {
+                    if (dlg.exportTimestamp) {
+                        stream << msg.time.toString("dd.MM.yyyy hh:mm:ss") << ",";
+                    }
+                    stream << QString::number(msg.port) << "," << msg.address << msg.typeTags;
+                    foreach (QString arg, msg.arguments) {
+                        stream << "," << arg;
+                    }
+                    stream << "\n";
+                }
+                file.close();
+            }
+        }
+    }
+}
+
+void MainWindow::onShowTimestampsChecked(int state)
+{
+    showTimestamps = state ? true : false;
+}
+
+void MainWindow::onShowOnlyUpdatedOscMessages(int state)
+{
+    showOnlyUpdatedMessages = state ? true : false;
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)
 {
+    // Save settings on exit
+    saveSettings();
+
     // Stop every OSC listener
     for (int i = 0; i < oscListeners.count(); i++) {
         OscListenerController *listener = oscListeners.at(i);

@@ -19,10 +19,10 @@ public:
     int Port();
 
 signals:
-    void messageReceived(ReceivedOscMessage *);
+    void messageReceived(OscMessageContainer *);
 
 private slots:
-    void handleMessage(ReceivedOscMessage*);
+    void handleMessage(OscMessageContainer*);
 
 private:
     QThread *workerThread;

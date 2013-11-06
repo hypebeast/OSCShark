@@ -1,4 +1,5 @@
 #include <QDebug>
+#include <QDateTime>
 
 #include "osclistenerworker.h"
 #include "common.h"
@@ -41,11 +42,12 @@ void OscListenerWorker::doWork()
                 pr.init(socket.packetData(), socket.packetSize());
                 oscpkt::Message *msg;
                 while (pr.isOk() && (msg = pr.popMessage()) != 0) {
-                    ReceivedOscMessage *m = new ReceivedOscMessage;
+                    OscMessageContainer *m = new OscMessageContainer;
                     m->port = this->port;
                     m->address = QString::fromStdString(msg->addressPattern());
                     m->typeTags = QString::fromStdString(msg->typeTags());
                     m->typeTags.insert(0, ',');
+                    m->time = QDateTime::currentDateTime();
 
                     oscpkt::Message::ArgReader arg(msg->arg());
                     while (arg.nbArgRemaining()) {

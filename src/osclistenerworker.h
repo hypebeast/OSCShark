@@ -25,7 +25,7 @@ public slots:
 
 signals:
     void finished();
-    void messageReceived(ReceivedOscMessage *msg);
+    void messageReceived(OscMessageContainer *msg);
 
 private:
     void doWork();
