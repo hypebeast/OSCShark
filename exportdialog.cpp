@@ -20,10 +20,10 @@ ExportDialog::ExportDialog(QWidget *parent) :
     lay1->addWidget(cbTimestamps);
     cbTimestamps->setChecked(true);
 
-    bOk = new QPushButton("Ok");
-    lay2->addWidget(bOk);
     bCancel = new QPushButton("Cancel");
     lay2->addWidget(bCancel);
+    bOk = new QPushButton("Ok");
+    lay2->addWidget(bOk);
 
     this->setWindowTitle("Export OSC Messages to a CSV file");
     this->setLayout(mainLayout);

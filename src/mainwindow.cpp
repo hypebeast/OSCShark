@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QMessageBox>
+#include <QIcon>
 
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
@@ -25,6 +26,7 @@ MainWindow::MainWindow(QWidget *parent) :
 {
     ui->setupUi(this);
 
+// Font Fix for Mac OS X Mavericks
 #ifdef Q_OS_MACX
     if ( QSysInfo::MacintoshVersion > QSysInfo::MV_10_8 )
     {
@@ -41,6 +43,9 @@ MainWindow::MainWindow(QWidget *parent) :
     QCoreApplication::setOrganizationName("SebastianRuml");
     QCoreApplication::setOrganizationDomain("sebastianruml.com");
     QCoreApplication::setApplicationName("OscMonitor");
+
+    // Set the icon
+    this->setWindowIcon(QIcon(":/icons/icon.png"));
 
     // Load the settings
     loadSettings();
@@ -67,7 +72,7 @@ void MainWindow::loadSettings()
     availablePorts = settings.value("ports/available").value< QList<int> >();
     activePorts = settings.value("ports/active").value< QList<int> >();
     showTimestamps = settings.value("main/showtimestamps").value<bool>();
-    showOnlyUpdatedMessages = settings.value("main/showonlyupdatedmessages").value<bool>();
+    showOnlyUpdatedAddresses = settings.value("main/showonlyupdatedmessages").value<bool>();
 }
 
 void MainWindow::saveSettings()
@@ -76,7 +81,7 @@ void MainWindow::saveSettings()
     settings.setValue("ports/available", QVariant::fromValue< QList<int> >(availablePorts));
     settings.setValue("ports/active", QVariant::fromValue< QList<int> >(activePorts));
     settings.setValue("main/showtimestamps", showTimestamps);
-    settings.setValue("main/showonlyupdatedmessages", showOnlyUpdatedMessages);
+    settings.setValue("main/showonlyupdatedmessages", showOnlyUpdatedAddresses);
 }
 
 void MainWindow::setupUi()
@@ -140,7 +145,7 @@ void MainWindow::setupUi()
     leftMainLayout->addWidget(cbShowTimestamps);
 
     cbShowOnlyUpdatedMessages = new QCheckBox("Show only updated Messages");
-    cbShowOnlyUpdatedMessages->setChecked(showOnlyUpdatedMessages);
+    cbShowOnlyUpdatedMessages->setChecked(showOnlyUpdatedAddresses);
     leftMainLayout->addWidget(cbShowOnlyUpdatedMessages);
     leftMainLayout->addSpacing(10);
 
@@ -200,7 +205,7 @@ void MainWindow::setupSignals()
     connect(bClearView, SIGNAL(clicked()), this, SLOT(onClearViewsClicked()));
     connect(bExport, SIGNAL(clicked()), this, SLOT(onExportClicked()));
     connect(cbShowTimestamps, SIGNAL(stateChanged(int)), this, SLOT(onShowTimestampsChecked(int)));
-    connect(cbShowOnlyUpdatedMessages, SIGNAL(stateChanged(int)), this, SLOT(onShowOnlyUpdatedOscMessages(int)));
+    connect(cbShowOnlyUpdatedMessages, SIGNAL(stateChanged(int)), this, SLOT(onShowOnlyUpdatedOscAddresses(int)));
 }
 
 void MainWindow::onAddPortClicked()
@@ -395,7 +400,14 @@ void MainWindow::processIncomingOscMessage(const OscMessageContainer *msg)
 
     if (filterOscMessage(msg->address) || monitoredOscAddresses.count() == 0) {
         receivedMessages.append(*msg);
-        logOscMessage(msg);
+        if (showOnlyUpdatedAddresses) {
+            if (!loggedOscAddresses.contains(msg->address)) {
+                loggedOscAddresses.append(msg->address);
+                logOscMessage(msg);
+            }
+        }
+        else
+            logOscMessage(msg);
     }
 }
 
@@ -459,6 +471,7 @@ void MainWindow::onExportClicked()
         return;
     }
 
+    // Show the export dialog
     ExportDialog dlg(this);
     int result = dlg.exec();
 
@@ -489,9 +502,30 @@ void MainWindow::onShowTimestampsChecked(int state)
     showTimestamps = state ? true : false;
 }
 
-void MainWindow::onShowOnlyUpdatedOscMessages(int state)
+void MainWindow::onShowOnlyUpdatedOscAddresses(int state)
 {
-    showOnlyUpdatedMessages = state ? true : false;
+    showOnlyUpdatedAddresses = state ? true : false;
+
+    // Show only updated addresses
+    if (state) {
+        logOutput->clear();
+        loggedOscAddresses.clear();
+        foreach (OscMessageContainer msg, receivedMessages) {
+            if (!loggedOscAddresses.contains(msg.address)) {
+                loggedOscAddresses.append(msg.address);
+                logOscMessage(&msg);
+            }
+        }
+    }
+    else // Show all addresses
+    {
+        logOutput->clear();
+        loggedOscAddresses.clear();
+        foreach (OscMessageContainer msg, receivedMessages) {
+            loggedOscAddresses.append(msg.address);
+            logOscMessage(&msg);
+        }
+    }
 }
 
 void MainWindow::closeEvent(QCloseEvent *event)

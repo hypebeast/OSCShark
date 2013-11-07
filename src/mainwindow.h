@@ -55,7 +55,8 @@ private:
     QCheckBox *cbShowTimestamps;
     QCheckBox *cbShowOnlyUpdatedMessages;
     bool showTimestamps;
-    bool showOnlyUpdatedMessages;
+    bool showOnlyUpdatedAddresses;
+    QList<QString> loggedOscAddresses;
 
     void setupUi();
     void loadSettings();
@@ -79,7 +80,7 @@ private slots:
     void onRemoveMonitoredOscAddressClicked(QListWidgetItem*);
     void onExportClicked();
     void onShowTimestampsChecked(int state);
-    void onShowOnlyUpdatedOscMessages(int state);
+    void onShowOnlyUpdatedOscAddresses(int state);
 };
 
 

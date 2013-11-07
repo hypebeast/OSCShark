@@ -11,6 +11,7 @@ greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 TARGET = OSCShark
 TEMPLATE = app
 
+#ICON = $$PWD/icon.icns
 
 SOURCES += \
     src/mainwindow.cpp \
