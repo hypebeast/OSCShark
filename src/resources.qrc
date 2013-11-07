@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/stylesheets">
+        <file>stylesheet.qss</file>
+    </qresource>
+    <qresource prefix="/data/icons/16x16">
+        <file>data/icons/16x16/chevron-down.png</file>
+        <file>data/icons/16x16/chevron-up.png</file>
+    </qresource>
+</RCC>

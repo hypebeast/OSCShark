@@ -71,3 +71,7 @@ OTHER_FILES += \
 
 RESOURCES += \
     src/resources.qrc
+
+macx {
+    #ICON = icon.icns
+}
