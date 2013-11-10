@@ -8,19 +8,22 @@ QT       += core gui network
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
+VERSION_MAJOR = 0
+VERSION_MINOR = 1
+VERSION_BUILD = 0
+
+DEFINES += "VERSION_MAJOR=$$VERSION_MAJOR"\
+            "VERSION_MINOR=$$VERSION_MINOR"\
+            "VERSION_BUILD=$$VERSION_BUILD"
+
+VERSION = $${VERSION_MAJOR}.$${VERSION_MINOR}.$${VERSION_BUILD}
+
 TARGET = OSCShark
 TEMPLATE = app
-
-#ICON = $$PWD/icon.icns
 
 SOURCES += \
     src/mainwindow.cpp \
     src/main.cpp \
-    src/oscpack/ip/IpEndpointName.cpp \
-    src/oscpack/osc/OscTypes.cpp \
-    src/oscpack/osc/OscReceivedElements.cpp \
-    src/oscpack/osc/OscPrintReceivedElements.cpp \
-    src/oscpack/osc/OscOutboundPacketStream.cpp \
     src/osclistenerworker.cpp \
     src/osclistenercontroller.cpp \
     exportdialog.cpp
@@ -28,19 +31,6 @@ SOURCES += \
 
 HEADERS  += \
     src/mainwindow.h \
-    src/oscpack/ip/UdpSocket.h \
-    src/oscpack/ip/TimerListener.h \
-    src/oscpack/ip/PacketListener.h \
-    src/oscpack/ip/NetworkingUtils.h \
-    src/oscpack/ip/IpEndpointName.h \
-    src/oscpack/osc/OscTypes.h \
-    src/oscpack/osc/OscReceivedElements.h \
-    src/oscpack/osc/OscPrintReceivedElements.h \
-    src/oscpack/osc/OscPacketListener.h \
-    src/oscpack/osc/OscOutboundPacketStream.h \
-    src/oscpack/osc/OscHostEndianness.h \
-    src/oscpack/osc/OscException.h \
-    src/oscpack/osc/MessageMappingOscPacketListener.h \
     src/osclistenerworker.h \
     src/osclistenercontroller.h \
     src/oscpkt/udp.hh \
@@ -48,23 +38,7 @@ HEADERS  += \
     common.h \
     exportdialog.h
 
-win32 {
-    SOURCES += src/oscpack/ip/win32/UdpSocket.cpp \
-        src/oscpack/ip/win32/NetworkingUtils.cpp
-
-   LIBS += C:\Qt\Tools\mingw48_32\i686-w64-mingw32\lib\libws2_32.a
-
-    #INCLUDEPATH += c:\Qt\Tools\mingw48_32\i686-w64-mingw32\include
-}
-
-unix {
-    SOURCES += src/oscpack/ip/posix/UdpSocket.cpp \
-        src/oscpack/ip/posix/NetworkingUtils.cpp
-}
-
 FORMS    += src/mainwindow.ui
-
-INCLUDEPATH += src/oscpack
 
 OTHER_FILES += \
     src/stylesheet.qss
@@ -73,5 +47,5 @@ RESOURCES += \
     src/resources.qrc
 
 macx {
-    #ICON = icon.icns
+    ICON = $${PWD}/src/data/icons/app_icon.icns
 }

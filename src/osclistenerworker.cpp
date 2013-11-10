@@ -52,7 +52,7 @@ void OscListenerWorker::doWork()
                     oscpkt::Message::ArgReader arg(msg->arg());
                     while (arg.nbArgRemaining()) {
                         if (arg.isBlob()) {
-                            // TODO
+                            // TODO: Not supported
                         } else if (arg.isBool()) {
                             bool b; arg.popBool(b);
                             QString s = b ? "true" : "false";

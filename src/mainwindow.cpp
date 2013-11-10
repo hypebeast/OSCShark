@@ -42,10 +42,10 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QCoreApplication::setOrganizationName("SebastianRuml");
     QCoreApplication::setOrganizationDomain("sebastianruml.com");
-    QCoreApplication::setApplicationName("OscMonitor");
+    QCoreApplication::setApplicationName("OscShark");
 
     // Set the icon
-    this->setWindowIcon(QIcon(":/icons/icon.png"));
+    //this->setWindowIcon(QIcon(":/icons/icon.png"));
 
     // Load the settings
     loadSettings();
@@ -135,9 +135,18 @@ void MainWindow::setupUi()
     infoText2->setFont(infoFont);
     leftMainLayout->addWidget(infoText2);
 
+    QHBoxLayout *buttonLayout = new QHBoxLayout;
+    leftMainLayout->addLayout(buttonLayout);
+
     bAddPort = new QPushButton;
     bAddPort->setText("Add Port");
-    leftMainLayout->addWidget(bAddPort);
+    buttonLayout->addWidget(bAddPort);
+    //leftMainLayout->addWidget(bAddPort);
+
+    bDeletePort = new QPushButton;
+    bDeletePort->setText("Delete");
+    buttonLayout->addWidget(bDeletePort);
+
     leftMainLayout->addSpacing(30);
 
     cbShowTimestamps = new QCheckBox("Show Timestamps");
@@ -157,8 +166,11 @@ void MainWindow::setupUi()
     bExport->setText("Export");
     leftMainLayout->addWidget(bExport);
 
-    leftMainLayout->addSpacing(42);
-    leftMainLayout->addStretch();
+    leftMainLayout->addSpacing(17);
+
+    QLabel *lVersion = new QLabel("OSC Shark v" +
+                            QString("%1.%2.%3").arg(VERSION_MAJOR).arg(VERSION_MINOR).arg(VERSION_BUILD));
+    leftMainLayout->addWidget(lVersion);
 
     logView = new QTextEdit;
     logView->setMinimumWidth(650);
@@ -198,6 +210,7 @@ void MainWindow::setupUi()
 void MainWindow::setupSignals()
 {
     connect(bAddPort, SIGNAL(clicked()), this, SLOT(onAddPortClicked()));
+    connect(bDeletePort, SIGNAL(clicked()), this, SLOT(onDeletePortClicked()));
     connect(lwAvailablePorts, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onAvailablePortClicked(QListWidgetItem*)));
     connect(lwListeningPorts, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onListeningPortClicked(QListWidgetItem*)));
     connect(lwReceivedOscAddresses, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(onAddOscAddressClicked(QListWidgetItem*)));
@@ -210,26 +223,52 @@ void MainWindow::setupSignals()
 
 void MainWindow::onAddPortClicked()
 {
-    bool ok;
-    int port = QInputDialog::getInt(this, tr("Add Port"), tr("Port:"),
-                                         0, 0, 65535, 1, &ok);
-
+    bool ok, error = false;
+//    int port = QInputDialog::getInt(this, tr("Add Port"), tr("Port:"),
+//                                         0, 0, 65535, 1, &ok);
+    QString strPort = QInputDialog::getText(this, tr("Add Port"), tr("Port"), QLineEdit::Normal,
+                          tr(""), &ok);
     if (ok) {
-        bool exists = false;
-        foreach (int p, availablePorts) {
-            if (p == port) {
-                exists = true;
-                break;
+        int port = strPort.toInt(&ok, 10);
+        if (ok) {
+            bool exists = false;
+            foreach (int p, availablePorts) {
+                if (p == port) {
+                    exists = true;
+                    break;
+                }
+            }
+
+            if (!exists) {
+                availablePorts.append(port);
+                new QListWidgetItem(QString::number(port), lwAvailablePorts);
+
+                saveSettings();
             }
         }
-
-        if (!exists) {
-            availablePorts.append(port);
-            new QListWidgetItem(QString::number(port), lwAvailablePorts);
-
-            saveSettings();
-        }
+        else
+            error = true;
     }
+
+    if (error) {
+        QMessageBox box(this);
+        box.setText("Could not add port");
+        box.exec();
+    }
+}
+
+void MainWindow::onDeletePortClicked()
+{
+    // Check if a port is selected
+    QList<QListWidgetItem*> items = lwAvailablePorts->selectedItems();
+    if (items.count() != 1) {
+        return;
+    }
+
+    // Remove port and item
+    int port = items[0]->text().toInt();
+    availablePorts.removeOne(port);
+    delete lwAvailablePorts->takeItem(lwAvailablePorts->row(items[0]));
 }
 
 void MainWindow::onAvailablePortClicked(QListWidgetItem *item)

@@ -4,7 +4,6 @@
 #include <QObject>
 #include <QThread>
 
-#include "ip/UdpSocket.h"
 #include "osclistenerworker.h"
 #include "common.h"
 

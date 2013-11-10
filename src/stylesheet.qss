@@ -37,7 +37,7 @@ QLabel {
 }
 
 QPushButton {
-    min-height: 10px;
+    min-height: 11px;
     max-height: 24px;
     margin-left: 2px;
     margin-right: 2px;
@@ -70,9 +70,9 @@ QLineEdit {
 }
 
 QSpinBox {
-    text-align: center;
+    /*text-align: center;*/
     padding-right: 15px;
-    min-height: 45px;
+    border-width: 5px;
 }
 
 QSpinBox:disabled {
@@ -81,11 +81,11 @@ QSpinBox:disabled {
 
 QSpinBox::up-button, QSpinBox::down-button {
      subcontrol-origin: border;
-     padding-left: 3px;
-     padding-right: 15px;
-     width: 14px; /* 16 + 2*1px border-width = 15px padding + 3px parent border */
-     height: 14px;
-     border-width: 3px;
+     padding-left: 0px;
+     padding-right: 60px;
+     width: 16px; /* 16 + 2*1px border-width = 15px padding + 3px parent border */
+     /*height: 14px;*/
+     border-width: 1px;
      border-radius: 1px;
      background-color: #eeeeee;
 }
@@ -113,17 +113,11 @@ QSpinBox::up-arrow {
 }
 
 QSpinBox::down-button {
-     subcontrol-position: bottom right; /* position at bottom right corner */
-
-    width: 16px;
+    subcontrol-position: bottom right; /* position at bottom right corner */
 }
 
 QSpinBox::down-arrow {
      image: url(:/data/icons/16x16/chevron-down.png);
-}
-
-QTextEdit::up-arrow {
-     image: url(:/data/icons/16x16/chevron-up.png);
 }
 
 QCheckBox {
