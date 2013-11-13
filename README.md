@@ -1,6 +1,6 @@
 
 # OSC Shark
-![OSC Shark]()
+![OSC Shark](https://raw.github.com/hypebeast/OSCShark/master/assets/app_icon.png)
 
 OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets.
 
@@ -10,7 +10,7 @@ OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packet
 
 OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets. It's written in C++ and QT. It runs on Windows, Linux and Mac OS.
 
-TODO: Add screenshot!
+![Screenshot](https://raw.github.com/hypebeast/OSCShark/master/assets/screenshots/screenshot_1.png)
 
 ## Features
 
