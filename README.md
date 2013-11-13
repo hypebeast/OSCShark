@@ -50,7 +50,7 @@ Initial release.
 
 **Downloads**
 
-* Mac OS: [http://sebastianruml.com/downloads/projects/OSCShark/OSCShark%20v0.0.1.dmg](OSCShark v0.0.1.dmg)
+* Mac OS: [OSCShark v0.0.1.dmg](http://sebastianruml.com/downloads/projects/OSCShark/OSCShark%20v0.0.1.dmg)
 
 ## For Developers
 
@@ -82,9 +82,9 @@ Once the script is finished, you should find the DMG image in the *scripts* dire
 
 ## Credits
 
-Thanks to [http://www.kasperkamperman.com/](Kasper Kamperman) for the initial idea. You can find his OSC Datamonitor [http://www.kasperkamperman.com/blog/osc-datamonitor/](here).
+Thanks to [Kasper Kamperman](http://www.kasperkamperman.com/) for the initial idea. You can find his OSC Datamonitor [http://www.kasperkamperman.com/blog/osc-datamonitor/](here).
 
-For receiving OSC messages [http://gruntthepeon.free.fr/oscpkt/](OscPkt) is used. Thanks Julien Pommier for this wonderful library.
+For receiving OSC messages [OscPkt](http://gruntthepeon.free.fr/oscpkt/) is used. Thanks Julien Pommier for this wonderful library.
 
 ## License
 
