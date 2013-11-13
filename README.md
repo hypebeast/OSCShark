@@ -1,11 +1,7 @@
 ![Alt text](https://raw.github.com/hypebeast/OSCShark/master/assets/logo.png)
 <hr>
 
-# OSC Shark
-
 OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets.
-
-< hr >
 
 ## Overview
 
