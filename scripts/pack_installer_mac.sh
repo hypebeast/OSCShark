@@ -50,6 +50,7 @@ fi
 
 # clear out any old data
 rm -rf "${STAGING_DIR}" "${DMG_TMP}" "${DMG_FINAL}"
+rm -rf "${BUILD_DIR}/${APP_NAME}.app"
 
 pushd "${BUILD_DIR}"
 

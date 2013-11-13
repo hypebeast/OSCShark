@@ -7,11 +7,22 @@ OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packet
 
 OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets. It's written in C++ and QT. It runs on Windows, Linux and Mac OS.
 
+#### [Downloads](#releases)
+
 ![Alt text](https://raw.github.com/hypebeast/OSCShark/master/assets/screenshots/screenshot_1.png)
 
 ## Features
 
-TODO
+OSC Shark provides the following features:
+
+* Cross-Platform (Windows, Linux and Mac OS)
+* No external dependencies
+* Listening for incoming OSC messages on multiple ports
+* Enable/Disable specific listening ports
+* OSC Address filtering
+* Timestamps for incoming OSC messages
+* Log only OSC messages from updated OSC addresses
+* Export logged OSC messages to a CSV file
 
 ## Installation
 
@@ -25,7 +36,11 @@ If you want to build OSC Shark by yourself see the 'For Developer' chapter for f
 
 ## Usage
 
-TODO
+The usage is quite simple:
+
+1. Start OSC Shark
+2. Add one or more listening ports with the **Add Port** button
+3. Start listening on a port with a double click
 
 ## Releases
 
@@ -35,7 +50,7 @@ Initial release.
 
 **Downloads**
 
-* Mac OS: TODO: add download link for installer
+* Mac OS: [http://sebastianruml.com/downloads/projects/OSCShark/OSCShark%20v0.0.1.dmg](OSCShark v0.0.1.dmg)
 
 ## For Developers
 
@@ -52,13 +67,24 @@ Brief guide:
     $ qmake OSCShark.pro
     $ make
 
-### Build Installer on Mac OS
+Now you should find an executable your build directory.
 
-TODO
+### Generate a DMG Image on Mac OS
+
+There is a script for building a DMG image that can be distributed to end-users. In order to build the DMG image you need to execute the following commands:
+
+    $ cd OSCShark
+    $ qmake
+    $ cd scripts
+    $ ./pack_installer_mac.sh
+
+Once the script is finished, you should find the DMG image in the *scripts* directory.
 
 ## Credits
 
-TODO
+Thanks to [http://www.kasperkamperman.com/](Kasper Kamperman) for the initial idea. You can find his OSC Datamonitor [http://www.kasperkamperman.com/blog/osc-datamonitor/](here).
+
+For receiving OSC messages [http://gruntthepeon.free.fr/oscpkt/](OscPkt) is used. Thanks Julien Pommier for this wonderful library.
 
 ## License
 
