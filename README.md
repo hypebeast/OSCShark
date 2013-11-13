@@ -1,4 +1,4 @@
-![Alt text](https://raw.github.com/hypebeast/OSCShark/master/assets/app_icon.png)
+![Alt text](https://raw.github.com/hypebeast/OSCShark/master/assets/app_icon_small.png)
 # OSC Shark
 
 
