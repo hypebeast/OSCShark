@@ -16,9 +16,9 @@
 
 # set up the app name, build directory, version and the background image
 APP_NAME="OSCShark"
-BUILD_DIR="../../build-release"
+BUILD_DIR=".."
 VERSION="0.0.1"
-BACKGROUND_DIR="../data/"
+BACKGROUND_DIR="../assets/"
 DMG_BACKGROUND_IMAGE="dmg_background.png"
 
 # you should not need to change these
@@ -51,8 +51,13 @@ fi
 # clear out any old data
 rm -rf "${STAGING_DIR}" "${DMG_TMP}" "${DMG_FINAL}"
 
-# Create the DMG image with 'macdeploymentqt'. Make sure that it's in your path
 pushd "${BUILD_DIR}"
+
+# Compile the app
+make clean
+make
+
+# Create the DMG image with 'macdeploymentqt'. Make sure that it's in your path
 macdeployqt "${APP_NAME}.app"
 popd
 cp -rpf "${BUILD_DIR}/${APP_NAME}.app" .

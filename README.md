@@ -1,14 +1,22 @@
+
 # OSC Shark
+![OSC Shark]()
+
+OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets.
+
+< hr >
+
+## Overview
 
 OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets. It's written in C++ and QT. It runs on Windows, Linux and Mac OS.
 
 TODO: Add screenshot!
 
-# Features
+## Features
 
 TODO
 
-# Installation
+## Installation
 
 OSC Shark is written in C++ and QT. It should run on every major platform: Windows, Linux and Mac OS.
 
@@ -16,21 +24,46 @@ The easiest way to install OSC Shark is to download one of the prebuild packages
 
 **Note**: Currently prebuild packages are only available for Mac OS. Packages for Windows and Linux will be provided in the future.
 
-# Usage
+If you want to build OSC Shark by yourself see the 'For Developer' chapter for further instructions.
+
+## Usage
 
 TODO
 
-# Releases
+## Releases
 
-## 0.0.1
+### 0.0.1
+
+Initial release.
+
+**Downloads**
 
 * Mac OS: TODO: add download link for installer
 
-# Credits
+## For Developers
+
+### Requirements
+
+* QT >= 5.1.1 (every QT 5 release should work too)
+
+### Build
+
+Brief guide:
+
+    $ git clone https://github.com/hypebeast/OSCShark.git
+    $ cd OSCShark
+    $ qmake OSCShark.pro
+    $ make
+
+### Build Installer on Mac OS
 
 TODO
 
-# License
+## Credits
+
+TODO
+
+## License
 
 OSC Shark is licensed under the terms of The MIT License (MIT).
 
