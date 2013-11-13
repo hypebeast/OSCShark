@@ -82,7 +82,7 @@ Once the script is finished, you should find the DMG image in the *scripts* dire
 
 ## Credits
 
-Thanks to [Kasper Kamperman](http://www.kasperkamperman.com/) for the initial idea. You can find his OSC Datamonitor [http://www.kasperkamperman.com/blog/osc-datamonitor/](http://www.kasperkamperman.com/blog/osc-datamonitor/).
+Thanks to [Kasper Kamperman](http://www.kasperkamperman.com/) for the initial idea. You can find his OSC Datamonitor [here](http://www.kasperkamperman.com/blog/osc-datamonitor/).
 
 For receiving OSC messages [OscPkt](http://gruntthepeon.free.fr/oscpkt/) is used. Thanks Julien Pommier for this wonderful library.
 
