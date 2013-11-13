@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8' />
+    <meta http-equiv="X-UA-Compatible" content="chrome=1" />
+    <meta name="description" content="Oscshark : OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets." />
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Oscshark</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/hypebeast/OSCShark">View on GitHub</a>
+
+          <h1 id="project_title">Oscshark</h1>
+          <h2 id="project_tagline">OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets.</h2>
+
+            <section id="downloads">
+              <a class="zip_download_link" href="https://github.com/hypebeast/OSCShark/zipball/master">Download this project as a .zip file</a>
+              <a class="tar_download_link" href="https://github.com/hypebeast/OSCShark/tarball/master">Download this project as a tar.gz file</a>
+            </section>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <p><img src="https://raw.github.com/hypebeast/OSCShark/master/assets/logo.png" alt="Alt text"></p>
+
+<hr><p>OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets.</p>
+
+<h2>
+<a name="overview" class="anchor" href="#overview"><span class="octicon octicon-link"></span></a>Overview</h2>
+
+<p>OSC Shark is a tool for monitoring and analysing OSC (Open Sound Control) packets. It's written in C++ and QT. It runs on Windows, Linux and Mac OS.</p>
+
+<h4>
+<a name="downloads" class="anchor" href="#downloads"><span class="octicon octicon-link"></span></a><a href="#releases">Downloads</a>
+</h4>
+
+<p><img src="https://raw.github.com/hypebeast/OSCShark/master/assets/screenshots/screenshot_1.png" alt="Alt text"></p>
+
+<h2>
+<a name="features" class="anchor" href="#features"><span class="octicon octicon-link"></span></a>Features</h2>
+
+<p>OSC Shark provides the following features:</p>
+
+<ul>
+<li>Cross-Platform (Windows, Linux and Mac OS)</li>
+<li>No external dependencies</li>
+<li>Listening for incoming OSC messages on multiple ports</li>
+<li>Enable/Disable specific listening ports</li>
+<li>OSC Address filtering</li>
+<li>Timestamps for incoming OSC messages</li>
+<li>Log only OSC messages from updated OSC addresses</li>
+<li>Export logged OSC messages to a CSV file</li>
+</ul><h2>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h2>
+
+<p>OSC Shark is written in C++ and QT. It should run on every major platform: Windows, Linux and Mac OS.</p>
+
+<p>The easiest way to install OSC Shark is to download one of the prebuild packages.</p>
+
+<p><strong>Note</strong>: Currently prebuild packages are only available for Mac OS. Packages for Windows and Linux will be provided in the future.</p>
+
+<p>If you want to build OSC Shark by yourself see the 'For Developer' chapter for further instructions.</p>
+
+<h2>
+<a name="usage" class="anchor" href="#usage"><span class="octicon octicon-link"></span></a>Usage</h2>
+
+<p>The usage is quite simple:</p>
+
+<ol>
+<li>Start OSC Shark</li>
+<li>Add one or more listening ports with the <strong>Add Port</strong> button</li>
+<li>Start listening on a port with a double click</li>
+</ol><h2>
+<a name="releases" class="anchor" href="#releases"><span class="octicon octicon-link"></span></a>Releases</h2>
+
+<h3>
+<a name="001" class="anchor" href="#001"><span class="octicon octicon-link"></span></a>0.0.1</h3>
+
+<p>Initial release.</p>
+
+<p><strong>Downloads</strong></p>
+
+<ul>
+<li>Mac OS: <a href="http://sebastianruml.com/downloads/projects/OSCShark/OSCShark%20v0.0.1.dmg">OSCShark v0.0.1.dmg</a>
+</li>
+</ul><h2>
+<a name="for-developers" class="anchor" href="#for-developers"><span class="octicon octicon-link"></span></a>For Developers</h2>
+
+<h3>
+<a name="requirements" class="anchor" href="#requirements"><span class="octicon octicon-link"></span></a>Requirements</h3>
+
+<ul>
+<li>QT &gt;= 5.1.1 (every QT 5 release should work too)</li>
+</ul><h3>
+<a name="build" class="anchor" href="#build"><span class="octicon octicon-link"></span></a>Build</h3>
+
+<p>Brief guide:</p>
+
+<pre><code>$ git clone https://github.com/hypebeast/OSCShark.git
+$ cd OSCShark
+$ qmake OSCShark.pro
+$ make
+</code></pre>
+
+<p>Now you should find an executable your build directory.</p>
+
+<h3>
+<a name="generate-a-dmg-image-on-mac-os" class="anchor" href="#generate-a-dmg-image-on-mac-os"><span class="octicon octicon-link"></span></a>Generate a DMG Image on Mac OS</h3>
+
+<p>There is a script for building a DMG image that can be distributed to end-users. In order to build the DMG image you need to execute the following commands:</p>
+
+<pre><code>$ cd OSCShark
+$ qmake
+$ cd scripts
+$ ./pack_installer_mac.sh
+</code></pre>
+
+<p>Once the script is finished, you should find the DMG image in the <em>scripts</em> directory.</p>
+
+<h2>
+<a name="credits" class="anchor" href="#credits"><span class="octicon octicon-link"></span></a>Credits</h2>
+
+<p>Thanks to <a href="http://www.kasperkamperman.com/">Kasper Kamperman</a> for the initial idea. You can find his OSC Datamonitor <a href="http://www.kasperkamperman.com/blog/osc-datamonitor/">here</a>.</p>
+
+<p>For receiving OSC messages <a href="http://gruntthepeon.free.fr/oscpkt/">OscPkt</a> is used. Thanks Julien Pommier for this wonderful library.</p>
+
+<h2>
+<a name="license" class="anchor" href="#license"><span class="octicon octicon-link"></span></a>License</h2>
+
+<p>OSC Shark is licensed under the terms of The MIT License (MIT).</p>
+
+<pre><code>The MIT License (MIT)
+
+Copyright (c) &lt;2013&gt; &lt;Sebastian Ruml&gt;
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Oscshark maintained by <a href="https://github.com/hypebeast">hypebeast</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-39943883-2");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+
+  </body>
+</html>
