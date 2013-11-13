@@ -9,7 +9,7 @@
 # Sebastian Ruml <sebastian@sebastianruml.name>
 # Created at: 2013.11.12
 #
-# This script is based on the packing script by Andy Maloney
+# This script is based on the packaging script by Andy Maloney
 # see: http://asmaloney.com/2013/07/howto/packaging-a-mac-os-x-application-using-a-dmg/
 #
 ####
